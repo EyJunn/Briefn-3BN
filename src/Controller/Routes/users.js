@@ -1,9 +1,9 @@
 const express = require("express");
 const { register, login } = require("../CtrlUsers");
-const { deleteArticle } = require("../CtrlAdmin");
+
 const router = express.Router();
 
 router.post("/register", register);
-router.post("/login", login);
+router.get("/login", login);
 
 module.exports = router;

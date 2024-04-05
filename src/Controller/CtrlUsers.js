@@ -3,7 +3,7 @@ const client = require("../Services/Connection");
 const { ObjectId } = require("bson");
 const bcrypt = require("bcrypt");
 
-async function register(request, response) {
+async function register(req, res) {
   if (
     !req.body.email ||
     !req.body.password ||
@@ -18,28 +18,29 @@ async function register(request, response) {
       .collection("user")
       .findOne({ email: req.body.email });
 
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     if (users) {
       res.status(401).json({ error: "Sort d'ici" });
+      return;
     }
-
-    const hashedPassword = await bcrypt.hash(request.body.password, 17);
     try {
       let user = new User(
-        request.body.firstName,
-        request.body.lastName,
-        request.body.email,
-        request.body.password,
+        req.body.firstName,
+        req.body.lastName,
+        req.body.email,
+        hashedPassword,
         new Date(),
-        true
+        true,
+        "user"
       );
       let result = await client
         .db("Pouleto")
         .collection("user")
         .insertOne(user);
-      response.status(200).json(result);
+      res.status(200).json(result);
     } catch (e) {
       console.log(e);
-      response.status(500).json({ error: e });
+      res.status(500).json({ error: e });
     }
   }
 }
@@ -54,19 +55,14 @@ async function login(req, res) {
     let user = await client
       .db("Pouleto")
       .collection("user")
-      .findOne({ email: req.body.email });
+      .findOne({ email: req.body.email, password: req.body.password });
 
     if (!user) {
       res.status(401).json({ error: "Invalid credentials" });
       return;
     } else {
-      await bcrypt.compare(req.body.password, user.password);
-      if (!isValidPassword) {
-        res.status(401).json({ error: "Invalid credentials" });
-        return;
-      } else {
-        res.status(200).json(user);
-      }
+      res.status(200).json(user);
+      // await bcrypt.compare(req.body.password, user.password);
     }
   } catch (e) {
     res.status(500).json({ error: e });

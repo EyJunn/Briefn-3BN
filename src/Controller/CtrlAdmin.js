@@ -14,14 +14,13 @@ async function deleteArticle(req, res) {
     .collection("Articles")
     .deleteOne({ _id: id });
 
-  let response = await apiCall;
-
-  if (response.deletedCount === 1) {
+  let apiRes = await apiCall;
+  console.log(apiRes);
+  if (apiRes.deletedCount >= 1) {
     res.status(200).json({ msg: "Suppression réussie" });
-  } else {
-    res.status(204).json({ msg: "Pas d'annonce pour cet Id" });
   }
 }
+
 async function deleteUsers(req, res) {
   if (!req.params.id) {
     res.status(400).send("Id Obligatoire");
@@ -34,20 +33,43 @@ async function deleteUsers(req, res) {
     .collection("user")
     .deleteOne({ _id: id });
 
-  let response = await apiCall;
+  let apiRes = await apiCall;
 
-  if (response.deletedCount === 1) {
+  if (apiRes.deletedCount === 1) {
     res.status(200).json({ msg: "Suppression réussie" });
-  } else {
-    res.status(204).json({ msg: "Pas d'annonce pour cet Id" });
   }
 }
 
 async function editArticle(req, res) {
-  let apiCall = await client
-    .db("Pouleto")
-    .collection("Article")
-    .updateOne({ _id: id });
+  let title = req.body.title;
+  let image = req.body.image;
+  const id = new ObjectId(req.params.id);
+  let description = req.body.description;
+  console.log(id);
+
+  try {
+    let apiRes = await client
+      .db("Pouleto")
+      .collection("Articles")
+      .updateOne(
+        {
+          _id: id,
+        },
+        {
+          $set: {
+            title: title,
+            image: image,
+            description: description,
+          },
+        }
+      );
+    if (apiRes.modifiedCount === 1) {
+      res.status(200).json({ msg: "Update successful" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Update failed" });
+  }
 }
 
-module.exports = { deleteArticle, deleteUsers };
+module.exports = { deleteArticle, deleteUsers, editArticle };
