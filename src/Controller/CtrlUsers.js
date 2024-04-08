@@ -55,14 +55,22 @@ async function login(req, res) {
     let user = await client
       .db("Pouleto")
       .collection("user")
-      .findOne({ email: req.body.email, password: req.body.password });
+      .findOne({ email: req.body.email });
 
     if (!user) {
       res.status(401).json({ error: "Invalid credentials" });
       return;
     } else {
-      res.status(200).json(user);
-      // await bcrypt.compare(req.body.password, user.password);
+      const isValidPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (!isValidPassword) {
+        res.status(401).json({ error: "Invalid credentials" });
+        return;
+      } else {
+        res.status(200).json({ msg: "Valid credentials" });
+      }
     }
   } catch (e) {
     res.status(500).json({ error: e });

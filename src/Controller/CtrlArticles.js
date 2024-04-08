@@ -22,7 +22,7 @@ async function addArticles(request, response) {
       request.body.description,
       request.body.location,
       request.body.price,
-      request.body.user,
+      request.body.user, // Faut générer l'user courant.
       new Date()
     );
     let result = await client
