@@ -1,7 +1,6 @@
 const { ObjectId } = require("bson");
 const { Articles } = require("../Model/Articles");
 const client = require("../Services/Connection");
-const { middleURL } = require("../middleWares/middlewares");
 
 async function addArticles(request, response) {
   if (
@@ -9,7 +8,7 @@ async function addArticles(request, response) {
     !request.body.image ||
     !request.body.description ||
     !request.body.location ||
-    !request.body.price
+    !request.body.prices
   ) {
     response.status(400).send("Missing fields");
     return;
@@ -18,11 +17,10 @@ async function addArticles(request, response) {
   try {
     let newArticles = new Articles(
       request.body.title,
-      middleURL,
+      request.body.image,
       request.body.description,
       request.body.location,
       request.body.price,
-      // Faut générer l'user courant.
       new Date()
     );
     let result = await client
