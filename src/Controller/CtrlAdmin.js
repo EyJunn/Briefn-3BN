@@ -1,7 +1,7 @@
 const { UserAdmin } = require("../Model/UsersAdmin");
 const client = require("../Services/Connection");
 const { ObjectId } = require("bson");
-const { middleId } = require("../middleswares/middlewares");
+const { middleId } = require("../middleWares/middlewares");
 
 async function deleteArticle(req, res) {
   if (!req.params.id) {
@@ -43,7 +43,7 @@ async function deleteUsers(req, res) {
   }
 }
 
-async function editArticle(req, res) {
+async function editArticles(req, res) {
   let title = req.body.title;
   let image = req.body.image;
   // const id = new ObjectId(req.params.id);
@@ -79,4 +79,4 @@ async function editArticle(req, res) {
   }
 }
 
-module.exports = { deleteArticle, deleteUsers, editArticle };
+module.exports = { deleteArticle, deleteUsers, editArticles };

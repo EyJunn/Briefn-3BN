@@ -1,7 +1,7 @@
 const { User } = require("../Model/Users");
 const client = require("../Services/Connection");
 const bcrypt = require("bcrypt");
-const { middleEmail } = require("../middleswares/middlewares");
+const { middleEmail } = require("../middleWares/middlewares");
 
 async function register(req, res) {
   if (
@@ -77,4 +77,40 @@ async function login(req, res) {
   }
 }
 
-module.exports = { register, login };
+async function editArticle(req, res) {
+  let title = req.body.title;
+  let image = req.body.image;
+  // const id = new ObjectId(req.params.id);
+  let id = middleId;
+  let description = req.body.description;
+
+  if (!title || !image || !description) {
+    res.status(400).json({ msg: "Missing Fields" });
+  }
+
+  try {
+    let apiRes = await client
+      .db("Pouleto")
+      .collection("Articles")
+      .updateOne(
+        {
+          _id: id,
+        },
+        {
+          $set: {
+            title: title,
+            image: image,
+            description: description,
+          },
+        }
+      );
+    if (apiRes.modifiedCount === 1) {
+      res.status(200).json({ msg: "Update successful" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Update failed" });
+  }
+}
+
+module.exports = { register, login, editArticle };
