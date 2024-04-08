@@ -1,7 +1,6 @@
 const { User } = require("../Model/Users");
 const client = require("../Services/Connection");
 const bcrypt = require("bcrypt");
-const { middleEmail } = require("../middleWares/middlewares");
 
 async function register(req, res) {
   if (
@@ -46,7 +45,7 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-  if (!middleEmail || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     res.status(400).json({ error: "Missing fields" });
     return;
   }
@@ -80,8 +79,7 @@ async function login(req, res) {
 async function editArticle(req, res) {
   let title = req.body.title;
   let image = req.body.image;
-  // const id = new ObjectId(req.params.id);
-  let id = middleId;
+  const id = new ObjectId(req.params.id);
   let description = req.body.description;
 
   if (!title || !image || !description) {

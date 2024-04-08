@@ -1,6 +1,7 @@
 const { ObjectId } = require("bson");
 const { Articles } = require("../Model/Articles");
 const client = require("../Services/Connection");
+const { middleURL } = require("../middleWares/middlewares");
 
 async function addArticles(request, response) {
   if (
@@ -17,7 +18,7 @@ async function addArticles(request, response) {
   try {
     let newArticles = new Articles(
       request.body.title,
-      request.body.image,
+      middleURL,
       request.body.description,
       request.body.location,
       request.body.price,
