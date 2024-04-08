@@ -1,13 +1,15 @@
 const { UserAdmin } = require("../Model/UsersAdmin");
 const client = require("../Services/Connection");
 const { ObjectId } = require("bson");
+const { middleId } = require("../middleswares/middlewares");
 
 async function deleteArticle(req, res) {
   if (!req.params.id) {
     res.status(400).send("Id Obligatoire");
   }
 
-  let id = new ObjectId(req.params.id);
+  // let id = new ObjectId(req.params.id);
+  let id = middleId;
 
   let apiCall = await client
     .db("Pouleto")
@@ -26,7 +28,8 @@ async function deleteUsers(req, res) {
     res.status(400).send("Id Obligatoire");
   }
 
-  let id = new ObjectId(req.params.id);
+  // let id = new ObjectId(req.params.id);
+  let id = middleId;
 
   let apiCall = await client
     .db("Pouleto")
@@ -43,9 +46,13 @@ async function deleteUsers(req, res) {
 async function editArticle(req, res) {
   let title = req.body.title;
   let image = req.body.image;
-  const id = new ObjectId(req.params.id);
+  // const id = new ObjectId(req.params.id);
+  let id = middleId;
   let description = req.body.description;
-  console.log(id);
+
+  if (!title || !image || !description) {
+    res.status(400).json({ msg: "Missing Fields" });
+  }
 
   try {
     let apiRes = await client

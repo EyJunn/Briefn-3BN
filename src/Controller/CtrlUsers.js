@@ -1,7 +1,7 @@
 const { User } = require("../Model/Users");
 const client = require("../Services/Connection");
-const { ObjectId } = require("bson");
 const bcrypt = require("bcrypt");
+const { middleEmail } = require("../middleswares/middlewares");
 
 async function register(req, res) {
   if (
@@ -46,7 +46,7 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-  if (!req.body.email || !req.body.password) {
+  if (!middleEmail || !req.body.password) {
     res.status(400).json({ error: "Missing fields" });
     return;
   }
@@ -66,7 +66,7 @@ async function login(req, res) {
         user.password
       );
       if (!isValidPassword) {
-        res.status(401).json({ error: "Invalid credentials" });
+        res.status(401).json({ error: "Invalid credentialss" });
         return;
       } else {
         res.status(200).json({ msg: "Valid credentials" });

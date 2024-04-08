@@ -8,8 +8,7 @@ async function addArticles(request, response) {
     !request.body.image ||
     !request.body.description ||
     !request.body.location ||
-    !request.body.price ||
-    !request.body.user
+    !request.body.price
   ) {
     response.status(400).send("Missing fields");
     return;
@@ -22,7 +21,7 @@ async function addArticles(request, response) {
       request.body.description,
       request.body.location,
       request.body.price,
-      request.body.user, // Faut générer l'user courant.
+      // Faut générer l'user courant.
       new Date()
     );
     let result = await client

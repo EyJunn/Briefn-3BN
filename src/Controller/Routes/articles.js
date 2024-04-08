@@ -4,9 +4,10 @@ const {
   getAllArticles,
   addArticles,
 } = require("../CtrlArticles");
+const { middleId } = require("../../middleswares/middlewares");
 const Router = express.Router();
 
-Router.delete("/deleteArticles/:id", deleteArticles);
+Router.delete("/deleteArticles/:id", middleId, deleteArticles);
 Router.get("/getAllArticles", getAllArticles);
 Router.post("/addArticles", addArticles);
 
