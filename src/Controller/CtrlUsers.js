@@ -1,6 +1,7 @@
 const { User } = require("../Model/Users");
 const client = require("../Services/Connection");
 const bcrypt = require("bcrypt");
+const { ObjectId } = require("bson");
 
 async function register(req, res) {
   if (
@@ -36,7 +37,8 @@ async function register(req, res) {
         .db("Pouleto")
         .collection("user")
         .insertOne(user);
-      res.status(200).json(result);
+      const id = user._id;
+      res.status(200).json({ result: result, id: id });
     } catch (e) {
       console.log(e);
       res.status(500).json({ error: e });
@@ -49,7 +51,6 @@ async function login(req, res) {
     res.status(400).json({ error: "Missing fields" });
     return;
   }
-
   try {
     let user = await client
       .db("Pouleto")
@@ -64,11 +65,13 @@ async function login(req, res) {
         req.body.password,
         user.password
       );
+
       if (!isValidPassword) {
         res.status(401).json({ error: "Invalid credentialss" });
         return;
       } else {
-        res.status(200).json({ msg: "Valid credentials" });
+        const userId = user._id;
+        res.status(200).json({ msg: "Valid credentials", id: userId });
       }
     }
   } catch (e) {
