@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", middleEmail, login);
-router.patch("/editArticle/:id", middleId, middleURL, editArticle);
+// router.patch("/editArticle/:id", middleId, middleURL, editArticle);
 
 module.exports = router;
