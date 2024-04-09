@@ -11,7 +11,6 @@ async function addArticles(request, response) {
     !request.body.price
   ) {
     response.status(400).send("Missing fields");
-    console.log("HELLLOOO");
     return;
   }
 
