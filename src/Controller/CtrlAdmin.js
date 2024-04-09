@@ -76,4 +76,16 @@ async function editArticles(req, res) {
   }
 }
 
-module.exports = { deleteArticle, deleteUsers, editArticles };
+async function getAllUsers(req, res) {
+  try {
+    let apiCall = client.db("Pouleto").collection("user").find();
+
+    let listings = await apiCall.toArray();
+
+    res.status(200).json(listings);
+  } catch (e) {
+    res.status(500).json({ error: e });
+  }
+}
+
+module.exports = { deleteArticle, deleteUsers, editArticles, getAllUsers };

@@ -8,9 +8,10 @@ async function addArticles(request, response) {
     !request.body.image ||
     !request.body.description ||
     !request.body.location ||
-    !request.body.prices
+    !request.body.price
   ) {
     response.status(400).send("Missing fields");
+    console.log("HELLLOOO");
     return;
   }
 
@@ -68,11 +69,36 @@ async function deleteArticles(req, res) {
 }
 
 async function editArticle(req, res) {
-  const id = req.params.id;
+  let title = req.body.title;
+  let image = req.body.image;
+  let description = req.body.description;
 
-  const { title, image, description, location, price } = req.body;
-  const IndexArticles = articles.findIndex(
-    (articles) => articles.id == Number(id)
-  );
+  if (!title || !image || !description) {
+    res.status(400).json({ msg: "Missing Fields" });
+  }
+
+  try {
+    let apiRes = await client
+      .db("Pouleto")
+      .collection("Articles")
+      .updateOne(
+        {
+          _id: id,
+        },
+        {
+          $set: {
+            title: title,
+            image: image,
+            description: description,
+          },
+        }
+      );
+    if (apiRes.modifiedCount === 1) {
+      res.status(200).json({ msg: "Update successful" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Update failed" });
+  }
 }
-module.exports = { addArticles, getAllArticles, deleteArticles };
+module.exports = { addArticles, getAllArticles, deleteArticles, editArticle };
