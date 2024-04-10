@@ -21,21 +21,31 @@ async function deleteArticle(req, res) {
   }
 }
 
-async function deleteUsers(req, res) {
+async function banUsers(req, res) {
   if (!req.params.id) {
     res.status(400).send("Id Obligatoire");
   }
+  let isActive = req.body.isActive;
 
   let id = new ObjectId(req.params.id);
 
   let apiCall = await client
     .db("Pouleto")
     .collection("user")
-    .deleteOne({ _id: id });
+    .updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          isActive: isActive,
+        },
+      }
+    );
 
   let apiRes = await apiCall;
 
-  if (apiRes.deletedCount === 1) {
+  if (apiRes.modifiedCount === 1) {
     res.status(200).json({ msg: "Suppression réussie" });
   }
 }
@@ -91,4 +101,4 @@ async function getAllUsers(req, res) {
   }
 }
 
-module.exports = { deleteArticle, deleteUsers, editArticles, getAllUsers };
+module.exports = { deleteArticle, banUsers, editArticles, getAllUsers };
