@@ -21,7 +21,8 @@ async function addArticles(request, response) {
       request.body.description,
       request.body.location,
       request.body.price,
-      new Date()
+      new Date(),
+      request.body.userId
     );
     let result = await client
       .db("Pouleto")
@@ -71,8 +72,10 @@ async function editArticle(req, res) {
   let title = req.body.title;
   let image = req.body.image;
   let description = req.body.description;
+  let location = req.body.location;
+  let price = req.body.price;
 
-  if (!title || !image || !description) {
+  if (!title || !image || !description || !location || !price) {
     res.status(400).json({ msg: "Missing Fields" });
   }
 
@@ -89,6 +92,8 @@ async function editArticle(req, res) {
             title: title,
             image: image,
             description: description,
+            location: location,
+            price: price,
           },
         }
       );

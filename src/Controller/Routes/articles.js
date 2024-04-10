@@ -11,7 +11,6 @@ const Router = express.Router();
 
 Router.delete("/deleteArticles/:id", middleId, deleteArticles);
 Router.get("/getAllArticles", getAllArticles);
-Router.post("/addArticles", middleURL, addArticles);
-Router.patch("/editArticle/:id", middleId, editArticle);
+Router.post("/addArticles", middleURL, addArticles);Router.patch("/editArticle/:id", middleId, editArticle);
 
 module.exports = Router;

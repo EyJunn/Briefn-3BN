@@ -43,11 +43,12 @@ async function deleteUsers(req, res) {
 async function editArticles(req, res) {
   let title = req.body.title;
   let image = req.body.image;
+  let location = req.body.location;
+  let price = req.body.price;
+  let description = req.body.description;
   const id = new ObjectId(req.params.id);
 
-  let description = req.body.description;
-
-  if (!title || !image || !description) {
+  if (!title || !image || !description || !location || !price) {
     res.status(400).json({ msg: "Missing Fields" });
   }
 
@@ -64,6 +65,8 @@ async function editArticles(req, res) {
             title: title,
             image: image,
             description: description,
+            location: location,
+            price: price,
           },
         }
       );
