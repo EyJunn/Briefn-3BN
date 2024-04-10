@@ -71,7 +71,8 @@ async function login(req, res) {
         return;
       } else {
         const userId = user._id;
-        res.status(200).json({ msg: "Valid credentials", id: userId });
+        const role= user.role;
+        res.status(200).json({ msg: "Valid credentials",id: userId, role: role });
       }
     }
   } catch (e) {
